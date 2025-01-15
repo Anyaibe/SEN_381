@@ -1,0 +1,151 @@
+<!-- Name: Anyaibe Chimeremeze Canaan -->
+<!-- Matric: VUG/SEN/22/7954 -->
+<!-- Course: SEN 381 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchain Interface</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #007BFF;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .form-group input {
+            width: 95%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Blockchain Interface</h1>
+    </header>
+    <div class="container">
+        <h2>Blockchain Viewer</h2>
+        <button id="viewBlockchain">View Blockchain</button>
+        <div id="blockchainOutput" class="output"></div>
+
+        <h2>Create Transaction</h2>
+        <form id="transactionForm">
+            <div class="form-group">
+                <label for="amount">Amount:</label>
+                <input type="number" id="amount" name="amount" required>
+            </div>
+            <div class="form-group">
+                <label for="sender">Sender:</label>
+                <input type="text" id="sender" name="sender" required>
+            </div>
+            <div class="form-group">
+                <label for="recipient">Recipient:</label>
+                <input type="text" id="recipient" name="recipient" required>
+            </div>
+            <button type="submit">Submit Transaction</button>
+        </form>
+        <div id="transactionOutput" class="output"></div>
+
+        <!-- Mine Block Section -->
+    <h2>Mine a New Block</h2>
+    <button id="mineBlock">Mine Block</button>
+    <div id="mineOutput" class="output"></div>
+
+    </div>
+
+    <script>
+        const baseUrl = 'http://localhost:3000'; // Adjust the URL to your API endpoint
+
+        document.getElementById('viewBlockchain').addEventListener('click', async () => {
+            try {
+                const response = await fetch(`${baseUrl}/blockchain`);
+                const data = await response.json();
+                document.getElementById('blockchainOutput').innerText = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('blockchainOutput').innerText = `Error: ${error.message}`;
+            }
+        });
+
+        document.getElementById('transactionForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const amount = document.getElementById('amount').value;
+            const sender = document.getElementById('sender').value;
+            const recipient = document.getElementById('recipient').value;
+
+            try {
+                const response = await fetch(`${baseUrl}/transaction`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ amount, sender, recipient })
+                });
+                const data = await response.text();
+                document.getElementById('transactionOutput').innerText = data;
+            } catch (error) {
+                document.getElementById('transactionOutput').innerText = `Error: ${error.message}`;
+            }
+        });
+
+        document.getElementById('mineBlock').addEventListener('click', async () => {
+            try {
+                const response = await fetch(`${baseUrl}/mine`);
+                const data = await response.json();
+                document.getElementById('mineOutput').innerText = JSON.stringify(data, null, 2);
+        
+                // Optionally refresh the blockchain viewer
+                const blockchainResponse = await fetch(`${baseUrl}/blockchain`);
+                const blockchainData = await blockchainResponse.json();
+                document.getElementById('blockchainOutput').innerText = JSON.stringify(blockchainData, null, 2);
+            } catch (error) {
+                document.getElementById('mineOutput').innerText = `Error: ${error.message}`;
+            }
+        });
+        
+    </script>
+</body>
+</html>

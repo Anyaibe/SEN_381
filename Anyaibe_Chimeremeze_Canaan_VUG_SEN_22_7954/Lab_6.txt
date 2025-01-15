@@ -1,0 +1,14 @@
+The Package.json file where the code:
+
+"scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --watch Lab_5 -e js dev/Lab_5/vpi.js"
+  },
+
+  was changed to:
+
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --watch Lab_6 -e js dev/Lab_6/vpi.js"
+  },
+  to keep track of Lab_6
